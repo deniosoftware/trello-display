@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
                 })
             })
         }).catch(err => {
-            req.session.destroy()
+            req.session = null
             res.render("index", {
                 trello_api_key: process.env.trello_api_key,
                 return_url: process.env.return_url
@@ -88,6 +88,11 @@ app.get('/display', (req, res) => {
     else{
         res.redirect('/')
     }
+})
+
+app.get('/logout', (req, res) => {
+    req.session = null
+    res.redirect('/')
 })
 
 app.listen(process.env.PORT || 8080, () => {
