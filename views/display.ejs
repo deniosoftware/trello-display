@@ -7,30 +7,38 @@
     <link rel='stylesheet' href='/display.css'>
     <script src='/main.js'></script>
 
+    <!--<meta http-equiv="refresh" content="10"/>-->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 </head>
 
-<body style="background-image:url('<%- board.prefs.backgroundImage %>')">
-    <div class="trello-header">
-        <h2 id="board-name"><%= board.name %></h2>
-        <h2 class="ml-auto mr-5"><%= board.shortUrl %></h2>
-    </div>
-    <div class="lists">
-        <% board.lists.forEach(list => { %>
-        <div class="list">
-            <span><%= list.name %></span>
-            <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
-            <div class="trello-card">
-                <div class="trello-labels">
-                    <% card.labels.forEach(label => { %>
-                    <span class="trello-label" style="background-color: <%- label.color %>;"><%= label.name %></span>
+<body
+    style="background-image:url('<%- board.prefs.backgroundImage %>');background-color:<%- board.prefs.backgroundBottomColor %>">
+    <div class="d-flex flex-column h-100">
+        <div class="trello-header">
+            <h2 id="board-name"><%= board.name %></h2>
+            <h2 class="ml-auto mr-5" id="url"><%= board.shortUrl %></h2>
+        </div>
+        <div class="lists">
+            <% board.lists.forEach(list => { %>
+            <div class="list">
+                <span><%= list.name %></span>
+                <div class="trello-cards">
+                    <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
+                    <div class="trello-card">
+                        <div class="trello-labels">
+                            <% card.labels.forEach(label => { %>
+                            <span class="trello-label"
+                                style="background-color: <%- label.color %>;"><%= label.name %></span>
+                            <% }) %>
+                        </div>
+                        <%= card.name %>
+                    </div>
                     <% }) %>
                 </div>
-                <%= card.name %>
             </div>
             <% }) %>
         </div>
-        <% }) %>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -42,7 +50,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <script>
-
+        $('.trello-cards').each((index, item) => {
+            item.animate({ scrollTop: item.height() - $().height() }, 1000, function () {
+                $(this).animate({ scrollTop: 0 }, 1000);
+            });
+        })
     </script>
 </body>
 

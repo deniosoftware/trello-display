@@ -38,11 +38,11 @@
 
     <script>
         $(function () {
-            $('#boards li').click(e => {
+            $('#boards li').click(function(e) {
                 $("#boards li").removeClass("active")
-                $(e.target).addClass("active")
+                $(this).addClass("active")
 
-                $("input[name='board']").val($(e.target).data("board"))
+                $("input[name='board']").val($(this).data("board"))
 
                 $("#start").attr("disabled", false)
             })

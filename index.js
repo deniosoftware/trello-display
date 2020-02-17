@@ -4,8 +4,6 @@ require('dotenv').config()
 
 var axios = require('axios')
 
-var session = require('express-session')
-var SQLiteStore = require('connect-sqlite3')(session)
 
 var express = require('express')
 var app = express()
@@ -13,11 +11,8 @@ var app = express()
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.use(session({
-    store: new SQLiteStore,
-    secret: "qwerty",
-    resave: false,
-    saveUninitialized: false
+app.use(require('cookie-session')({
+    secret: "qwerty"
 }))
 app.use(express.urlencoded({
     extended: true
@@ -85,6 +80,7 @@ app.get('/display', (req, res) => {
     if(req.session.token && req.query.board){
         axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}&lists=open&cards=visible`).then(resp => {
             res.render('display', {board: resp.data})
+            //res.json(resp.data)
         }).catch(err => {
             res.redirect('/')
         })

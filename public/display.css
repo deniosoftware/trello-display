@@ -23,25 +23,30 @@ html{
 .list{
     width: 20vw;
     background-color: rgba(255, 255, 255, 0.8);
-    display: inline-block;
-
-    padding: 1vw;
 
     border-radius: 0.5vw;
 
     vertical-align: top;
     white-space: normal;
+
+    max-height: 99%;
+    /*overflow: auto;*/
+
+    display: inline-flex;
+    flex-direction: column;
 }
 
 .list > span{
     color: black;
     font-size: 2vw;
-    margin-bottom: 2vw;
+    margin: 1vw 1vw 2vw 1vw;
     display: inline-block;
 }
 
 .lists{
-    margin-left: 3vw;
+    padding: 0 3vw;
+    flex: 1 1 auto;
+    overflow: auto;
 }
 
 .trello-card{
@@ -71,4 +76,14 @@ html{
     flex-direction: row;
     align-items: center;
     padding: 1vw 3vw;
+}
+
+#url{
+    font-size: 2vw;
+}
+
+.trello-cards{
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0 1vw;
 }
