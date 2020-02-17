@@ -1,0 +1,74 @@
+body{
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+html{
+    white-space: nowrap;
+}
+
+*{
+    color: white;
+}
+
+#board-name{
+    font-size: 3vw;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: inline-block;
+    padding: 1vw 1.5vw;
+    border-radius: 1vw;
+}
+
+.list{
+    width: 20vw;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: inline-block;
+
+    padding: 1vw;
+
+    border-radius: 0.5vw;
+
+    vertical-align: top;
+    white-space: normal;
+}
+
+.list > span{
+    color: black;
+    font-size: 2vw;
+    margin-bottom: 2vw;
+    display: inline-block;
+}
+
+.lists{
+    margin-left: 3vw;
+}
+
+.trello-card{
+    color: black;
+    font-size: 1.5vw;
+    padding: 1vw;
+    margin: 0.5vw 0;
+    background-color: white;
+    border-radius: 4px;
+    border: 2px solid rgb(230, 230, 230);
+}
+
+.trello-label{
+    font-size: 1vw;
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.1vw 0.5vw;
+    border-radius: 1000px;
+}
+
+.trello-labels{
+    display: block;
+}
+
+.trello-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1vw 3vw;
+}

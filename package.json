@@ -1,0 +1,21 @@
+{
+  "name": "trello-display",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Caleb Denio",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/connect-datastore": "^4.0.0",
+    "axios": "^0.19.2",
+    "connect-sqlite3": "^0.9.11",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "ws": "^7.2.1"
+  }
+}
