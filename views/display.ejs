@@ -19,7 +19,7 @@
         <div class="lists">
             <% board.lists.forEach(list => { %>
             <div class="list">
-                <span><%= list.name %></span>
+                <span><%= list.name %> <span class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span>
                 <div class="trello-cards">
                     <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
                     <div class="trello-card">
