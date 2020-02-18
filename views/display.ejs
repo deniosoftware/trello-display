@@ -19,7 +19,8 @@
         <div class="lists">
             <% board.lists.forEach(list => { %>
             <div class="list">
-                <span><%= list.name %> <span class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span></span>
+                <span><%= list.name %> <span
+                        class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span></span>
                 <div class="trello-cards">
                     <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
                     <div class="trello-card">
@@ -50,14 +51,25 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <script>
-        $(function(){
-            setTimeout(function(){
+        $(function () {
+            setTimeout(function () {
+                console.log("Updating...")
                 $.ajax({
-                    success: function(data){
+                    success: function (data) {
                         $(document.body).html(data)
                     }
                 })
             }, 10000)
+
+            function isOverflown(element) {
+                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+            }
+
+            $(".trello-cards").each(function(){
+                if(isOverflown(this)){
+                    $(this).addClass("overflown")
+                }
+            })
         })
     </script>
 </body>

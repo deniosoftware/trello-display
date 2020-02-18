@@ -84,8 +84,24 @@ html{
 
 .trello-cards{
     flex: 1 1 auto;
-    overflow: auto;
+    overflow: hidden;
     padding: 0 1vw;
+    position: relative;
+}
+.trello-cards.overflown::after{
+    content: "";
+    position: absolute;
+    display: inline-block;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-bottom-left-radius: 0.5vw;
+    border-bottom-right-radius: 0.5vw;
+    z-index: 5;
+
+    background-image: linear-gradient(to bottom, transparent 80%, rgb(200, 200, 200));
+    pointer-events: none;
 }
 
 #attribution{
@@ -95,4 +111,6 @@ html{
     background-color: rgba(0, 0, 0, 0.7);
     font-size: 1.2vw;
     padding: 2vw;
+
+    z-index: 10;
 }
