@@ -58,10 +58,6 @@ app.get('/', (req, res) => {
     }
 })
 
-app.get('/auth', (req, res) => {
-    res.render("auth")
-})
-
 app.post('/auth', (req, res) => {
     if(req.body.token){
         axios.get(`https://api.trello.com/1/members/me/?key=${process.env.trello_api_key}&token=${req.body.token}`).then(resp => {

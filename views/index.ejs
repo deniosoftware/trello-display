@@ -4,23 +4,64 @@
 <head>
     <title>Trello Display</title>
     <link rel='stylesheet' type='text/css' media='screen' href='/main.css'>
-    <script src='/main.js'></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <style>
+        #loader {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div class="d-flex align-items-center justify-content-center h-100">
-        <a class="btn btn-primary" href="https://trello.com/1/authorize?expiration=never&name=Trello%20Display&scope=read&response_type=token&return_url=<%- return_url %>&key=<%- trello_api_key %>">Sign in with Trello</a>
+        <a id="login" class="btn btn-primary"
+            href="https://trello.com/1/authorize?callback_method=postMessage&expiration=never&name=Trello%20Display&scope=read&return_url=<%- return_url %>&key=<%- trello_api_key %>"><span
+                id="loader" class="spinner-border spinner-border-sm"></span> Sign
+            in with Trello</a>
     </div>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script>
+        var win
+
+        $("#login").click(function (e) {
+            e.preventDefault()
+            win = window.open($(this).attr("href"), null, "toolbar=no,width=500px,height=700px,left=15px,top=15px")
+            $("#loader").css("display", "inline-block")
+        })
+
+        window.addEventListener("message", function (e) {
+            if (e.origin == "https://trello.com") {
+                var token = e.data
+
+                if (!token || token == "") {
+                    $("#loader").css("display", "none")
+                }
+                else {
+                    axios.post('/auth', {
+                        token
+                    }).then(function (response) {
+                        window.location.href = "/"
+                    }).catch(function (err) {
+                        window.location.href = "/"
+                    })
+                }
+            }
+            if (win) {
+                win.close()
+            }
+        }, false)
+    </script>
 </body>
 
 </html>
