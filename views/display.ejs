@@ -19,7 +19,7 @@
         <div class="lists">
             <% board.lists.forEach(list => { %>
             <div class="list">
-                <span><%= list.name %> <span class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span>
+                <span><%= list.name %> <span class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span></span>
                 <div class="trello-cards">
                     <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
                     <div class="trello-card">
@@ -36,6 +36,11 @@
             </div>
             <% }) %>
         </div>
+    </div>
+
+    <div id="attribution">
+        Powered by Trello Display<br>
+        <b>trello-display.deniosoftware.com</b>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

@@ -87,3 +87,12 @@ html{
     overflow: auto;
     padding: 0 1vw;
 }
+
+#attribution{
+    position: fixed;
+    bottom: 1vw;
+    right: 1vw;
+    background-color: rgba(0, 0, 0, 0.7);
+    font-size: 1.2vw;
+    padding: 2vw;
+}
