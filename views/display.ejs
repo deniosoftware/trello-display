@@ -9,41 +9,37 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 </head>
 
-<body
-    style="background-image:url('<%- board.prefs.backgroundImage %>');background-color:<%- board.prefs.backgroundBottomColor %>">
-    <div class="d-flex flex-column h-100">
-        <div class="trello-header">
-            <h2 id="board-name"><%= board.name %></h2>
-            <h2 class="ml-auto mr-5" id="url"><%= board.shortUrl %></h2>
-        </div>
-        <div class="lists">
-            <% board.lists.forEach(list => { %>
-            <div class="list">
-                <span><%= list.name %> <span
-                        class="badge badge-primary"><%= board.cards.filter(card => card.idList == list.id).length %></span></span>
-                <div class="trello-cards">
-                    <% board.cards.filter(card => card.idList == list.id).forEach(card => { %>
-                    <div class="trello-card">
-                        <div class="trello-labels">
-                            <% card.labels.forEach(label => { %>
-                            <span class="trello-label"
-                                style="background-color: <%- label.color %>;"><%= label.name %></span>
-                            <% }) %>
+<body>
+    <div id="app"
+        :style="{backgroundImage: 'url(' + board.backgroundImage + ')', backgroundColor: board.backgroundColor}">
+        <div class="d-flex flex-column h-100">
+            <div class="trello-header">
+                <h2 id="board-name">{{ board.name }}</h2>
+                <h2 class="ml-auto mr-5" id="url">{{ board.url }}</h2>
+            </div>
+            <div class="lists">
+                <div class="list" v-for="list in board.lists">
+                    <span>{{ list.name }} <span class="badge badge-primary">{{ list.cards.length }}</span></span>
+                    <div class="trello-cards">
+                        <div class="trello-card" v-for="card in list.cards">
+                            <div class="trello-labels">
+                                <span v-for="label in card.labels" class="trello-label"
+                                    :style="{backgroundColor: label.color}">{{ label.name }}</span>
+                            </div>
+                            {{ card.name }}
                         </div>
-                        <%= card.name %>
                     </div>
-                    <% }) %>
                 </div>
             </div>
-            <% }) %>
+        </div>
+
+        <div id="attribution">
+            Powered by Trello Display<br>
+            <b>trello-display.deniosoftware.com</b>
         </div>
     </div>
 
-    <div id="attribution">
-        Powered by Trello Display<br>
-        <b>trello-display.deniosoftware.com</b>
-    </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
@@ -51,25 +47,66 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <script>
-        $(function () {
-            setTimeout(function () {
-                console.log("Updating...")
-                $.ajax({
-                    success: function (data) {
-                        $(document.body).html(data)
-                    }
-                })
-            }, 10000)
-
-            function isOverflown(element) {
-                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        var app = new Vue({
+            el: "#app",
+            data: {
+                board: {
+                    name: "Test",
+                    url: "Hi",
+                    backgroundImage: "",
+                    backgroundColor: "red",
+                    lists: [
+                        {
+                            name: "list",
+                            cards: [
+                                {
+                                    name: "hi",
+                                    labels: [
+                                        {
+                                            name: "test",
+                                            color: "red"
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: "Another",
+                                    labels: []
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
+        })
 
-            $(".trello-cards").each(function(){
-                if(isOverflown(this)){
-                    $(this).addClass("overflown")
+        function updateBoard(){
+            console.log("Updating...")
+            $.ajax({
+                method: "POST",
+                success: function (data) {
+                    app.board = {
+                        name: data.name,
+                        url: data.shortUrl,
+                        backgroundImage: data.prefs.backgroundImage
+                    }
+                },
+                error: function (jqXHR) {
+                    alert("Error updating display.")
                 }
             })
+        }
+        setTimeout(updateBoard, 10000)
+
+        updateBoard()
+
+        function isOverflown(element) {
+            return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        }
+
+        $(".trello-cards").each(function () {
+            if (isOverflown(this)) {
+                $(this).addClass("overflown")
+            }
         })
     </script>
 </body>

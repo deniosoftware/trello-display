@@ -1,4 +1,4 @@
-body{
+#app{
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -113,4 +113,8 @@ html{
     padding: 2vw;
 
     z-index: 10;
+}
+
+#app{
+    height: 100%;
 }
