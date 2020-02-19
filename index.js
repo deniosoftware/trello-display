@@ -4,9 +4,11 @@ require('dotenv').config()
 
 var axios = require('axios')
 
-
 var express = require('express')
 var app = express()
+
+var server = require('http').createServer(app)
+var io = require('socket.io')(server)
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
@@ -15,9 +17,16 @@ app.use(require('cookie-session')({
     secret: "qwerty"
 }))
 app.use(express.urlencoded({
-    extended: true
+    extended: true,
+    verify: (req, res, buf) => {
+        req.rawBody = buf
+    }
 }))
-app.use(express.json())
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf
+    }
+}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
@@ -73,8 +82,15 @@ app.post('/auth', (req, res) => {
 
 app.get('/display', (req, res) => {
     if (req.session.token && req.query.board) {
-        axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}&lists=open&cards=visible`).then(resp => {
-            res.render('display', { board: resp.data })
+
+        axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}`).then(resp => {
+            res.render('display', { board: { name: resp.data.name, id: resp.data.id } })
+
+            axios.post(`https://api.trello.com/1/webhooks?idModel=${req.query.board}&callbackURL=${process.env.webhook_url}&key=${process.env.trello_api_key}&token=${req.session.token}&description=Trello%20Display`).then(resp => {
+                console.log("Success")
+            }).catch(err => {
+                // Webhook already exists, and that's OK
+            })
         }).catch(err => {
             res.redirect('/')
         })
@@ -89,11 +105,11 @@ app.post('/display', (req, res) => {
         axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}&lists=open&cards=visible`).then(resp => {
             res.json(resp.data)
         }).catch(err => {
-            res.status(400)
+            res.status(400).send()
         })
     }
     else {
-        res.status(400)
+        res.status(400).send()
     }
 })
 
@@ -102,6 +118,21 @@ app.get('/logout', (req, res) => {
     res.redirect('/')
 })
 
-app.listen(process.env.PORT || 8080, () => {
+app.head('/trelloWebhook', (req, res) => {
+    res.send()
+})
+
+app.post('/trelloWebhook', require('./verifyTrelloWebhook'))
+app.post('/trelloWebhook', (req, res) => {
+    res.send()
+
+    io.in(req.body.model.id).emit("update")
+})
+
+io.on("connection", (socket) => {
+    socket.join(socket.handshake.query.board)
+})
+
+server.listen(process.env.PORT || 8080, () => {
     console.log("App started.")
 })
