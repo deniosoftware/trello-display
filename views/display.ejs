@@ -52,6 +52,10 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
+        <% if(ignore){ %>
+            var ignore = "<%- ignore.replace(/"/g, '\\"') %>".split(",")
+        <% } %>
+
         var app = new Vue({
             el: "#app",
             data: {
@@ -90,7 +94,7 @@
                         backgroundColor: data.prefs.backgroundTopColor
                     }
 
-                    app.board.lists = data.lists.map(item => {
+                    app.board.lists = data.lists.filter(item => ignore ? !ignore.includes(item.name.toLowerCase()) : true).map(item => {
                         return {
                             name: item.name,
                             cards: data.cards.filter(card => card.idList == item.id)
