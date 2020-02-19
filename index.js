@@ -84,7 +84,13 @@ app.get('/display', (req, res) => {
     if (req.session.token && req.query.board) {
 
         axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}`).then(resp => {
-            res.render('display', { board: { name: resp.data.name, id: resp.data.id } })
+            res.render('display', {
+                board: {
+                    name: resp.data.name,
+                    id: resp.data.id
+                },
+                ignore: req.query.ignore
+            })
 
             axios.post(`https://api.trello.com/1/webhooks?idModel=${req.query.board}&callbackURL=${process.env.webhook_url}&key=${process.env.trello_api_key}&token=${req.session.token}&description=Trello%20Display`).then(resp => {
                 console.log("Success")
