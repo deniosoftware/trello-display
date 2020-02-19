@@ -45,8 +45,7 @@ app.get('/', (req, res) => {
         }).catch(err => {
             req.session = null
             res.render("index", {
-                trello_api_key: process.env.trello_api_key,
-                return_url: process.env.return_url
+                trello_api_key: process.env.trello_api_key
             })
         })
     }

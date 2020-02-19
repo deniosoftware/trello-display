@@ -51,35 +51,26 @@
             el: "#app",
             data: {
                 board: {
-                    name: "Test",
-                    url: "Hi",
+                    name: "",
+                    url: "",
                     backgroundImage: "",
-                    backgroundColor: "red",
-                    lists: [
-                        {
-                            name: "list",
-                            cards: [
-                                {
-                                    name: "hi",
-                                    labels: [
-                                        {
-                                            name: "test",
-                                            color: "red"
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: "Another",
-                                    labels: []
-                                }
-                            ]
+                    backgroundColor: "",
+                    lists: []
+                }
+            },
+            watch: {
+                board: function(){
+                    $(".trello-cards").each(function () {
+                        console.log("woot")
+                        if (isOverflown(this)) {
+                            $(this).addClass("overflown")
                         }
-                    ]
+                    })
                 }
             }
         })
 
-        function updateBoard(){
+        function updateBoard() {
             console.log("Updating...")
             $.ajax({
                 method: "POST",
@@ -87,27 +78,29 @@
                     app.board = {
                         name: data.name,
                         url: data.shortUrl,
-                        backgroundImage: data.prefs.backgroundImage
+                        backgroundImage: data.prefs.backgroundImage,
+                        backgroundColor: data.prefs.backgroundTopColor
                     }
+
+                    app.board.lists = data.lists.map(item => {
+                        return {
+                            name: item.name,
+                            cards: data.cards.filter(card => card.idList == item.id)
+                        }
+                    })
                 },
                 error: function (jqXHR) {
                     alert("Error updating display.")
                 }
             })
         }
-        setTimeout(updateBoard, 10000)
+        setInterval(updateBoard, 10000)
 
         updateBoard()
 
         function isOverflown(element) {
             return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
         }
-
-        $(".trello-cards").each(function () {
-            if (isOverflown(this)) {
-                $(this).addClass("overflown")
-            }
-        })
     </script>
 </body>
 
