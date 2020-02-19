@@ -1,4 +1,4 @@
-body{
+#app{
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -34,6 +34,8 @@ html{
 
     display: inline-flex;
     flex-direction: column;
+
+    margin: 0 0.3vw;
 }
 
 .list > span{
@@ -65,6 +67,7 @@ html{
     font-weight: bold;
     padding: 0.1vw 0.5vw;
     border-radius: 1000px;
+    margin: 0 0.2vw;
 }
 
 .trello-labels{
@@ -113,4 +116,8 @@ html{
     padding: 2vw;
 
     z-index: 10;
+}
+
+#app{
+    height: 100%;
 }
