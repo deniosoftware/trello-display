@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Trello Display</title>
+    <title>Trello Display - <%= board.name %></title>
     <link rel='stylesheet' type='text/css' media='screen' href='/main.css'>
     <link rel='stylesheet' href='/display.css'>
 
@@ -37,6 +37,10 @@
             Powered by Trello Display<br>
             <b>trello-display.deniosoftware.com</b>
         </div>
+
+        <div class="alert alert-danger snackbar shadow text-center" :class="{shown: alert.shown}">
+            {{ alert.text }}
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -45,6 +49,7 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <script>
         var app = new Vue({
@@ -56,12 +61,15 @@
                     backgroundImage: "",
                     backgroundColor: "",
                     lists: []
+                },
+                alert: {
+                    shown: false,
+                    text: ""
                 }
             },
             watch: {
                 board: function(){
                     $(".trello-cards").each(function () {
-                        console.log("woot")
                         if (isOverflown(this)) {
                             $(this).addClass("overflown")
                         }
@@ -90,16 +98,35 @@
                     })
                 },
                 error: function (jqXHR) {
-                    alert("Error updating display.")
+                    showAlert("Error updating display", 5000)
                 }
             })
         }
-        setInterval(updateBoard, 10000)
 
         updateBoard()
 
+        var socket = io({
+            query: {
+                board: "<%- board.id %>"
+            },
+            transports: ['polling']
+        })
+
+        socket.on("update", () => {
+            updateBoard()
+        })
+
         function isOverflown(element) {
             return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+        }
+
+        function showAlert(text, duration){
+            app.alert.text = text
+            app.alert.shown = true
+
+            if(duration){
+                setTimeout(() => {app.alert.shown = false}, duration)
+            }
         }
     </script>
 </body>
