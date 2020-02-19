@@ -24,7 +24,7 @@
                         <div class="trello-card" v-for="card in list.cards">
                             <div class="trello-labels">
                                 <span v-for="label in card.labels" class="trello-label"
-                                    :style="{backgroundColor: label.color}">{{ label.name }}</span>
+                                    :style="{backgroundColor: colors[label.color]}">{{ label.name }}</span>
                             </div>
                             {{ card.name }}
                         </div>
@@ -52,10 +52,6 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-        <% if(ignore){ %>
-            var ignore = "<%- ignore.replace(/"/g, '\\"') %>".split(",")
-        <% } %>
-
         var app = new Vue({
             el: "#app",
             data: {
@@ -69,10 +65,22 @@
                 alert: {
                     shown: false,
                     text: ""
+                },
+                colors: {
+                    red: "#eb5a46",
+                    green: "#61bd4f",
+                    blue: "#0079bf",
+                    orange: "#ff9f1a",
+                    yellow: "#f2d600",
+                    sky: "#00c2e0",
+                    purple: "#c377e0",
+                    black: "#344563",
+                    pink: "#ff78cb",
+                    lime: "#51e898"
                 }
             },
             watch: {
-                board: function(){
+                board: function () {
                     $(".trello-cards").each(function () {
                         if (isOverflown(this)) {
                             $(this).addClass("overflown")
@@ -94,10 +102,19 @@
                         backgroundColor: data.prefs.backgroundTopColor
                     }
 
-                    app.board.lists = data.lists.filter(item => ignore ? !ignore.includes(item.name.toLowerCase()) : true).map(item => {
+                    app.board.lists = data.lists.map(item => {
                         return {
                             name: item.name,
                             cards: data.cards.filter(card => card.idList == item.id)
+                        }
+                    })
+
+                    $(".trello-cards").each(function () {
+                        if (isOverflown(this)) {
+                            $(this).addClass("overflown")
+                        }
+                        else {
+                            $(this).removeClass("overflown")
                         }
                     })
                 },
@@ -106,6 +123,17 @@
                 }
             })
         }
+
+        window.addEventListener("resize", () => {
+            $(".trello-cards").each(function () {
+                if (isOverflown(this)) {
+                    $(this).addClass("overflown")
+                }
+                else {
+                    $(this).removeClass("overflown")
+                }
+            })
+        })
 
         updateBoard()
 
@@ -124,12 +152,12 @@
             return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
         }
 
-        function showAlert(text, duration){
+        function showAlert(text, duration) {
             app.alert.text = text
             app.alert.shown = true
 
-            if(duration){
-                setTimeout(() => {app.alert.shown = false}, duration)
+            if (duration) {
+                setTimeout(() => { app.alert.shown = false }, duration)
             }
         }
     </script>

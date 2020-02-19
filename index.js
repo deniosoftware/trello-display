@@ -109,7 +109,19 @@ app.get('/display', (req, res) => {
 app.post('/display', (req, res) => {
     if (req.session.token && req.query.board) {
         axios.get(`https://api.trello.com/1/boards/${req.query.board}/?key=${process.env.trello_api_key}&token=${req.session.token}&lists=open&cards=visible`).then(resp => {
-            res.json(resp.data)
+            if(!req.query.ignore || req.query.ignore == ""){
+                res.json(resp.data)
+            }
+            else{
+                var data = resp.data
+                var ignore = req.query.ignore.split(",")
+
+                resp.data.lists = resp.data.lists.filter(item => {
+                    return !ignore.map(item2 => item2.toLowerCase()).includes(item.name.toLowerCase())
+                })
+
+                res.json(resp.data)
+            }
         }).catch(err => {
             res.status(400).send()
         })
