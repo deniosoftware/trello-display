@@ -93,7 +93,8 @@ html{
 }
 
 .trello-cards.overflown{
-    mask-image: linear-gradient(to bottom, white 80%, transparent)
+    mask-image: linear-gradient(to bottom, white 80%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, white 80%, transparent);
 }
 
 #attribution{
