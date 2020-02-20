@@ -91,20 +91,9 @@ html{
     padding: 0 1vw;
     position: relative;
 }
-.trello-cards.overflown::after{
-    content: "";
-    position: absolute;
-    display: inline-block;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border-bottom-left-radius: 0.5vw;
-    border-bottom-right-radius: 0.5vw;
-    z-index: 5;
 
-    background-image: linear-gradient(to bottom, transparent 80%, rgb(200, 200, 200));
-    pointer-events: none;
+.trello-cards.overflown{
+    mask-image: linear-gradient(to bottom, white 80%, transparent)
 }
 
 #attribution{

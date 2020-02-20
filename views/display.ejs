@@ -78,15 +78,6 @@
                     pink: "#ff78cb",
                     lime: "#51e898"
                 }
-            },
-            watch: {
-                board: function () {
-                    $(".trello-cards").each(function () {
-                        if (isOverflown(this)) {
-                            $(this).addClass("overflown")
-                        }
-                    })
-                }
             }
         })
 
@@ -109,13 +100,15 @@
                         }
                     })
 
-                    $(".trello-cards").each(function () {
-                        if (isOverflown(this)) {
-                            $(this).addClass("overflown")
-                        }
-                        else {
-                            $(this).removeClass("overflown")
-                        }
+                    Vue.nextTick(function () {
+                        $(".trello-cards").each(function () {
+                            if (isOverflown(this)) {
+                                $(this).addClass("overflown")
+                            }
+                            else {
+                                $(this).removeClass("overflown")
+                            }
+                        })
                     })
                 },
                 error: function (jqXHR) {
